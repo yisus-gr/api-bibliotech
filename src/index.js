@@ -19,6 +19,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json());
 
 app.use('/api/libros', require('./routes/libros'))
+app.use('/api/users', require('./routes/users'))
 
 app.listen(app.get('port'), () => {
     console.log(`Server on port  ${app.get('port')}`)

@@ -96,8 +96,6 @@ router.put("/:isbn",  (req, res) => {
       
       const { titulo, autor, year, sinopsis, ID_biblioteca, portada_url, existencias  } = req.body;
       
-      console.log(req.body)
-
       const updatedProducto = {
         titulo, 
         autor, 
