@@ -47,8 +47,6 @@ router.get("/:id", (req, res) => {
 
 router.post("/", (req, res) => {
     const { ISBN, titulo, autor, year, sinopsis, portada_url, categoria_id, editorial } = req.body;
-
-    console.log(req.body);
     
     if (ISBN && titulo && autor && year && portada_url && categoria_id && editorial ) {
       
