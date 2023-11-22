@@ -33,17 +33,21 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/cp/:cp', (req, res) => {
+    //obtiene las bibliotecas mas cercanas basadas en el codigo postal
+    const cp_str = req.params.cp.toString()
+    const primerosDosDigitos = cp_str.slice(0, 2)
+
     req.getConnection((err, conn) => {
         if(err) {
             return res.status(500).send("Error en el servidor ")
         }
-        conn.query("SELECT * FROM BIBLIOTECAS WEHERE CP = ?",
-            [req.params.cp],
+        conn.query("SELECT * FROM BIBLIOTECAS WHERE LEFT(CAST(CP AS CHAR), 2) = ? ORDER BY ABS(CP - ?);",
+            [primerosDosDigitos, req.params.cp],
             (err, result) => {
                 if(err) {
                     return res.status(500).send("Error al obtener datos")
                 }
-                res.json(result[0])
+                res.json(result)
             }
         )
     })
@@ -69,6 +73,26 @@ router.post("/", (req, res) => {
         }
         else {
             return res.status(500).send("Datos faltantes")
+        }
+    })
+})
+
+router.post("/inventario/", (req, res) => {
+    req.getConnection((err, conn) => {
+        if(err) {
+            return res.status("Error en el servidor", err)
+        }
+        const {ID_LIBRO , ID_BIBLIOTECA, EXISTENCIAS} = req.body
+        if(ID_LIBRO && ID_BIBLIOTECA) {
+            conn.query("INSERT INTO INVENTARIO SET ?",
+                [{ID_LIBRO, ID_BIBLIOTECA, EXISTENCIAS}],
+                (err) =>{
+                    if(err){
+                        return res.status(500).send("Error al insertar datos")
+                    }
+                }
+            )
+            res.json({ID_LIBRO, ID_BIBLIOTECA, EXISTENCIAS})
         }
     })
 })

@@ -151,4 +151,43 @@ router.post("/:id/reviews", (req, res) => {
   })
 })
 
+router.get("/inventario/:id", (req, res) => {
+  //Obtener blbiliotecas que tienen el libro con esa id
+  req.getConnection((err, conn) => {
+    if (err) {
+      return res.status(500).send("Error en el servidor ");
+    }
+
+      conn.query(
+          "SELECT * FROM inventario WHERE ID_libro = ?",
+          [req.params.id],
+          (err, result) => {
+              if (err) {
+                  return res.status(500).send(err);
+              }
+              res.json(result);
+          }
+      );
+  });
+
+});
+
+router.get("/inventario/biblioteca/:id", (req, res) => {
+  req.getConnection((err, conn) =>{
+    if(err) {
+      return res.status(500).send("Error en el servidor")
+    }
+    conn.query(
+      "SELECT * FROM inventario WHERE id_biblioteca = ?",
+      [req.params.id],
+      (err, result) => {
+          if (err) {
+              return res.status(500).send(err);
+          }
+          res.json(result);
+      }
+  );
+  })
+})
+
 module.exports = router;
